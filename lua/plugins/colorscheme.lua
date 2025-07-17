@@ -5,6 +5,11 @@ return {
     priority = 1000,
     opts = {}, -- Optional
     config = function()
+      require('jellybeans').setup {
+        italics = false,
+        bold = false,
+      }
+
       vim.cmd.colorscheme 'jellybeans'
     end
   }

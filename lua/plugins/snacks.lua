@@ -13,16 +13,15 @@ return {
           ['<C-t>'] = 'tabedit',
         },
         use_devicons = true,
+        hidden = true,
+        ignored = true,
       },
       sources = {
+        files = {},
         explorer = {
           win = {
             list = {
-              keys = {
-                ["h"] = "explorer_up",
-                ["l"] = "confirm",
-                ["<CR>"] = "confirm"
-              }
+              keys = {}
             }
           }
         }
@@ -215,27 +214,99 @@ return {
       },
       statuscolumn = {
         enabled = true,
-
         left = { "mark", "sign" },
-        right = { "git", "fold" },
-
+        right = { "fold", "git" },
         folds = {
-          open = true,
-          git_hl = true,
+          open = false,
+          git_hl = false,
         },
-
         git = {
-          patterns = { "GitSign", "MiniDiffSign", "Gitsigns" },
+          patterns = { "GitSign", "MiniDiffSign" },
         },
-
-        signs = {
-          disabled = {},
-        },
-
-        marks = {
-          enabled = true,
-        },
+        refresh = 50,
       },
+      scroll = {
+        enabled = false,
+        animate = {
+          duration = { step = 15, total = 250 },
+          easing = "linear",
+        },
+        animate_repeat = {
+          delay = 100,
+          duration = { step = 5, total = 50 },
+          easing = "linear",
+        },
+        filter = function(buf)
+          return vim.g.snacks_scroll ~= false and vim.b[buf].snacks_scroll ~= false and vim.bo[buf].buftype ~= "terminal"
+        end,
+      },
+      dashboard = {
+        width = 60,
+        row = nil,
+        col = nil,
+        pane_gap = 4,
+        autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        preset = {
+          ---@type fun(cmd:string, opts:table)|nil
+          pick = nil,
+          ---@type snacks.dashboard.Item[]
+          keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+            { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+          header = [[
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿
+⡇⣶⠆⣴⣶⡶⢠⡖⡴⣴⠂⢄⣒⡂⡶⣐⣒⣒⣒⡂⢲⡆⢲⣦⠐⣶⣶⣶⣶⣶⠀⡔⣶⣶⣶⡶⢠⣶⡀⡆⣶⡶⠶⡀⢢⢶⡖⡀⠄⡲⣶⣶⣖⡆⠠⢰⣶⣆⢶⡄⢲⢸
+⡇⡟⡆⣿⣿⡇⣾⠃⣿⠃⢢⣿⣿⡇⣧⣿⣿⣿⣿⣷⡀⣿⢠⢻⣆⠜⣿⣿⣯⣿⡇⢧⢻⠛⣿⢃⣾⣿⡅⢧⣶⣿⣿⣿⣔⠕⠳⢳⡌⢄⠙⣿⣿⡼⢂⢃⢿⣿⡜⡇⣇⢸
+⡇⢇⡇⣿⣿⠀⣿⠸⡟⢀⣿⣿⣿⣇⢸⣿⣿⣿⣿⣿⣧⡸⣇⣧⢿⣄⠸⣿⣿⣻⣿⢸⡜⡤⣿⢸⣿⣿⠇⣸⣿⣿⣿⣿⣿⣧⣻⡄⢿⣄⠄⠘⣿⣿⣼⡘⢸⣿⡇⡇⢸⢸
+⡇⢸⡇⠟⣿⠀⡟⠀⢁⣾⣿⡿⢿⣛⡸⠿⠯⠿⣿⣛⡿⣷⣝⢞⢷⡙⢦⠈⢿⣿⣿⡀⣷⡄⠞⣾⣿⡿⣰⣿⣿⣿⡿⣿⣻⠿⠯⠿⠦⣝⢳⠄⠈⢿⡆⡇⢺⣿⡇⣇⢸⢸
+⡇⢸⡇⠠⣿⡀⡇⢀⣿⠿⠉⠈⠁⢀⣀⠀⠀⠀⠀⠀⠉⠓⢿⣯⣏⠻⣦⣕⠄⠙⢿⣧⠘⣿⣦⣻⣿⣿⣿⣿⣿⠗⠋⠁⠀⣀⠀⠀⠀⠀⠀⠉⠐⠀⠃⡃⢸⣿⡇⢸⢸⣸
+⡇⡘⣿⠀⢺⡇⠃⢈⠁⠀⢠⣴⠀⣬⡍⠀⠀⠀⢠⣦⠀⣤⡐⢌⢿⣷⣬⣻⢷⣥⣀⠘⠳⡘⣿⣿⣿⣿⣿⠟⠅⣠⡔⢀⣬⡅⠀⠀⠀⣰⣦⠰⣤⠀⠀⠁⢸⡿⢀⡟⣿⢸
+⡇⡇⣿⡆⠈⢿⡀⢾⣿⣄⠸⣿⠸⣿⣧⠀⠀⢀⣾⣯⠶⢿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣶⣬⣌⣻⣿⣿⣿⣿⣴⣿⣧⢸⣿⣇⠀⠀⣠⣿⡷⠶⡟⢀⣾⠃⣾⠃⣼⠃⣿⢸
+⡇⣇⠿⣷⠐⡌⢧⠸⣿⣿⣷⢽⠣⠹⢿⣿⣿⡿⠿⢋⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡂⠹⠿⣿⣿⣿⠿⠣⣪⢵⣿⠇⣸⠃⢠⡟⣰⣿⢸
+⡇⣿⢠⣿⡇⢹⡆⢣⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣴⠁⢰⢸⢱⢸⣿⢸
+⡇⣿⡼⢹⣿⡀⢻⣮⡂⠻⣿⣿⣿⡿⣽⣟⡾⣷⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣻⢯⡿⣽⣿⣿⠟⠑⢠⡆⠐⠇⠎⣾⣿⢸
+⣷⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣾
+
+N E O V I M
+          ]]
+        },
+        formats = {
+          icon = function(item)
+            if item.file and item.icon == "file" or item.icon == "directory" then
+              return M.icon(item.file, item.icon)
+            end
+            return { item.icon, width = 2, hl = "icon" }
+          end,
+          footer = { "%s", align = "center" },
+          header = { "%s", align = "center" },
+          file = function(item, ctx)
+            local fname = vim.fn.fnamemodify(item.file, ":~")
+            fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+            if #fname > ctx.width then
+              local dir = vim.fn.fnamemodify(fname, ":h")
+              local file = vim.fn.fnamemodify(fname, ":t")
+              if dir and file then
+                file = file:sub(-(ctx.width - #dir - 2))
+                fname = dir .. "/…" .. file
+              end
+            end
+            local dir, file = fname:match("^(.*)/(.+)$")
+            return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
+          end,
+        },
+        sections = {
+          { section = "header" },
+          { section = "keys",   gap = 1, padding = 1 },
+          { section = "startup" },
+        },
+      }
     },
     keys = {
       -- Picker keys

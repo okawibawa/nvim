@@ -69,17 +69,13 @@ return {
             { get_lsp_clients },
           },
           lualine_x = {
-            -- This is for `utf-8 |  |  lua`
             function()
               local encoding = vim.bo.fileencoding or 'none'
-              local fileformat = vim.bo.fileformat or 'none'
               local filetype = vim.bo.filetype or 'none'
 
-              local linux_icon = ''
               local eye_icon = ''
 
-              -- Ensure icons are rendered correctly by your font
-              return string.format("%s | %s | %s %s", encoding, linux_icon, eye_icon, filetype)
+              return string.format("%s | %s %s", encoding, eye_icon, filetype)
             end,
           },
           lualine_y = { 'progress' },

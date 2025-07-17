@@ -16,6 +16,10 @@ return {
 					-- Neovim Config
 					'lua'
 				},
+        modules = {},
+        sync_install = {},
+        ignore_install = {},
+        auto_install = {},
 				highlight = { enable = true },
 				indend = { enable = true },
 			})
