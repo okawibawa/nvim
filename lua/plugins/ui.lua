@@ -1,13 +1,13 @@
--- lua/plugins/ui.lua
 return {
-  {
-    'akinsho/bufferline.nvim',
-    version = "*",
-    dependencies = "nvim-tree/nvim-web-devicons",
-    config = function()
-      require('bufferline').setup({})
-    end
-  },
+  -- {
+  --   'akinsho/bufferline.nvim',
+  --   version = "*",
+  --   dependencies = "nvim-tree/nvim-web-devicons",
+  --   config = function(buf_number, buf_list)
+  --     require('bufferline').setup({
+  --     })
+  --   end
+  -- },
   {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
@@ -17,7 +17,6 @@ return {
     config = function()
       local lualine = require('lualine')
 
-      -- Get file icon, name, and optionally directory
       local function get_file_icon_and_basename()
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
         if filename == "" then return "[No Name]" end
@@ -28,17 +27,6 @@ return {
         return string.format("%s %s", icon, filename)
       end
 
-      -- Get Git branch
-      local function get_git_branch()
-        local branch_name = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD 2>/dev/null")[1]
-        if branch_name and branch_name ~= "" then
-          return " " .. branch_name -- Git icon + branch name as a single string
-        else
-          return "" -- Return empty string if no branch, Lualine will hide the component
-        end
-      end
-
-      -- Get active LSP client names
       local function get_lsp_clients()
         local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
         if #clients > 0 then
@@ -69,8 +57,6 @@ return {
             { get_file_icon_and_basename },
           },
           lualine_c = {
-            -- Based on the image, diffs were not in this exact spot.
-            -- Add them back if you want them here.
             -- { 'diff',
             --   colors = { added = { fg = 'green' }, modified = { fg = 'yellow' }, removed = { fg = 'red' } },
             --   symbols = { added = '+', modified = '~', removed = '-' }
@@ -79,10 +65,6 @@ return {
               'diagnostics',
               sources = { 'nvim_lsp' },
               symbols = { error = ' ', warn = ' ', info = ' ' },
-              -- Lualine's built-in themes often handle colors.
-              -- If 'ayu_dark' theme defines these, you don't need custom colors here.
-              -- If you want to force specific colors, use hex codes or `vim.api.nvim_get_hl`
-              -- diagnostics_color = { error = 'red', warn = 'yellow', info = 'blue' }
             },
             { get_lsp_clients },
           },
