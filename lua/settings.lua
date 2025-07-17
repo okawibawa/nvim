@@ -31,7 +31,7 @@ vim.opt.showmode = false
 
 -- Use the system clipboard for copy/paste operations
 vim.schedule(function()
-	vim.opt.clipboard = 'unnamedplus'
+  vim.opt.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent for better readability of wrapped lines
@@ -79,15 +79,22 @@ vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
 vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
 
 -- Keybindings: Navigate between windows using Ctrl + h/j/k/l
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-h>', '<cmd>wincmd h<CR>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-l>', '<cmd>wincmd l<CR>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-j>', '<cmd>wincmd j<CR>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<cmd>wincmd k<CR>', { desc = 'Move focus to the upper window' })
 
 -- vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { desc = 'Close current buffer' })
 vim.keymap.set("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffer" })
 vim.keymap.set("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
 vim.keymap.set("n", "<leader>ba", function() Snacks.bufdelete.all() end, { desc = "Delete All Buffers" })
+
+-- Tabs
+vim.keymap.set('n', '<leader>tn', '<cmd>tabnext<CR>', { desc = 'Next Tab' })
+vim.keymap.set('n', '<leader>tp', '<cmd>tabprevious<CR>', { desc = 'Previous Tab' })
+vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<CR>', { desc = 'Close Tab' })
+vim.keymap.set('n', '<leader>to', '<cmd>tabonly<CR>', { desc = 'Close Other Tabs' })
+vim.keymap.set('n', '<leader>tt', '<cmd>tabnew<CR>', { desc = 'New tab' })
 
 -- FZF Keymaps
 -- vim.keymap.set('n', '<leader>ff', '<cmd>Files<CR>', { desc = 'Find Files (FZF)' })

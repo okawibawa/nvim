@@ -9,7 +9,7 @@ return {
         backend = 'fzf',
         actions = {
           ['<C-v>'] = 'vsplit',
-          ['<C-x>'] = 'split',
+          ['<C-s>'] = 'split',
           ['<C-t>'] = 'tabedit',
         },
         use_devicons = true,
