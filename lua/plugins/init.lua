@@ -41,7 +41,10 @@ local plugins = {
 	require 'plugins.editor',
 
 	-- Snacks
-	require 'plugins.snacks'
+	require 'plugins.snacks',
+
+  -- Navigation
+  require 'plugins.navigation'
 }
 
 require('lazy').setup(plugins, {

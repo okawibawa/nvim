@@ -42,9 +42,10 @@ return {
       input = {
         enabled = true,
         win = {
-          relative = "cursor",
-          row = -3,
-          col = 0,
+          relative = "editor",
+          noautocmd = true,
+          row = 2,
+          col = nil,
           width = 60,
           height = 1,
           border = "rounded",
@@ -289,7 +290,7 @@ return {
 
           local indent_dot_color = catppuccin_mocha
               .overlay0
-          local chunk_color = catppuccin_mocha.blue
+          local chunk_color = catppuccin_mocha.lavender
 
           for i = 1, 8 do
             vim.api.nvim_set_hl(0, "SnacksIndent" .. i, { fg = indent_dot_color })
