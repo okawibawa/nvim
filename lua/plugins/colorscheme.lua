@@ -1,18 +1,26 @@
 return {
   {
-    "wtfox/jellybeans.nvim",
+    "xero/miasma.nvim",
     lazy = false,
     priority = 1000,
-    opts = {}, -- Optional
     config = function()
-      require('jellybeans').setup {
-        italics = false,
-        bold = false,
-      }
-
-      vim.cmd.colorscheme 'jellybeans'
-    end
+      vim.cmd("colorscheme miasma")
+    end,
   }
+  -- {
+  --   "wtfox/jellybeans.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {}, -- Optional
+  --   config = function()
+  --     require('jellybeans').setup {
+  --       italics = false,
+  --       bold = false,
+  --     }
+
+  --     vim.cmd.colorscheme 'jellybeans'
+  --   end
+  -- }
   -- {
   --   "arturgoms/moonbow.nvim",
   --   config = function()

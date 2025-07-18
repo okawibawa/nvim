@@ -36,7 +36,7 @@ return {
         win = {
           relative = "editor",
           noautocmd = true,
-          row = 2,
+          row = 3,
           col = nil,
           width = 60,
           height = 1,
@@ -302,6 +302,12 @@ N E O V I M
       },
       terminal = {
         enabled = false,
+        win = { style = "terminal" },
+        shell = vim.o.shell,
+        start_insert = true,
+        auto_insert = true,
+        auto_close = true,
+        interactive = true,
       }
     },
     keys = {
@@ -326,13 +332,18 @@ N E O V I M
       -- {
       --   "<leader>tf",
       --   function()
-      --     Snacks.terminal.toggle(nil, {
+      --     require("snacks").terminal.toggle(nil, {
       --       win = {
-      --         style = "terminal",
-      --         position = "float",
+      --         style = "float",
+      --         relative = "editor",
       --         width = 0.8,
       --         height = 0.8,
-      --       }
+      --         row = 0.1,
+      --         col = 0.1,
+      --         border = "rounded",
+      --       },
+      --       interactive = true,
+      --       cwd = vim.fn.getcwd(),
       --     })
       --   end,
       --   desc = "Toggle floating terminal"
@@ -340,11 +351,15 @@ N E O V I M
       -- {
       --   "<leader>th",
       --   function()
-      --     Snacks.terminal.toggle(nil, {
+      --     require("snacks").terminal.toggle(nil, {
       --       win = {
+      --         style = "terminal",
+      --         relative = "editor",
       --         position = "bottom",
-      --         height = 0.3,
-      --       }
+      --         size = { height = 0.3 },
+      --       },
+      --       interactive = true,
+      --       cwd = vim.fn.getcwd(),
       --     })
       --   end,
       --   desc = "Toggle horizontal terminal"
@@ -352,58 +367,38 @@ N E O V I M
       -- {
       --   "<leader>tv",
       --   function()
-      --     Snacks.terminal.toggle(nil, {
+      --     require("snacks").terminal.toggle(nil, {
       --       win = {
+      --         style = "terminal",
+      --         relative = "editor",
       --         position = "right",
-      --         width = 0.4,
-      --       }
+      --         size = { width = 0.4 },
+      --       },
+      --       interactive = true,
+      --       cwd = vim.fn.getcwd(),
       --     })
       --   end,
       --   desc = "Toggle vertical terminal"
+      -- },
+      -- {
+      --   "<leader>tc",
+      --   "<cmd>lua require('snacks').terminal.get():hide()<cr>",
+      --   mode = { "n", "t" },
+      --   desc = "Hide terminal"
       -- },
     },
     init = function()
       vim.api.nvim_create_autocmd("ColorScheme", {
         callback = function()
-          -- Catppuccin Mocha Palette (selected relevant colors)
-          local catppuccin_mocha = {
-            rosewater = "#f5e0dc",
-            flamingo  = "#f2cdcd",
-            pink      = "#f5c2e7",
-            mauve     = "#cba6f7",
-            red       = "#f38ba8",
-            maroon    = "#eba0ac",
-            peach     = "#fab387",
-            yellow    = "#f9e2af",
-            green     = "#a6e3a1",
-            teal      = "#94e2d5",
-            sky       = "#89dceb",
-            sapphire  = "#74c7ce",
-            blue      = "#89b4fa",
-            lavender  = "#b4befe",
-            text      = "#cdd6f4",
-            subtext1  = "#bac2de",
-            subtext0  = "#a6adc8",
-            overlay2  = "#9399b2",
-            overlay1  = "#7f849c",
-            overlay0  = "#6c7086",
-            surface2  = "#585b70",
-            surface1  = "#45475a",
-            surface0  = "#313244",
-            base      = "#1e1e2e",
-            mantle    = "#181825",
-            crust     = "#11111b",
-          }
-
-          local indent_dot_color = catppuccin_mocha
-              .overlay0
-          local chunk_color = catppuccin_mocha.lavender
-
-          for i = 1, 8 do
-            vim.api.nvim_set_hl(0, "SnacksIndent" .. i, { fg = indent_dot_color })
-          end
-
-          vim.api.nvim_set_hl(0, "SnacksIndentChunk", { fg = chunk_color, bold = false })
+          vim.api.nvim_set_hl(0, "SnacksIndent1", { fg = "#555555" }) -- Adjust for Jellybeans
+          vim.api.nvim_set_hl(0, "SnacksIndent2", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent3", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent4", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent5", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent6", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent7", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndent8", { fg = "#555555" })
+          vim.api.nvim_set_hl(0, "SnacksIndentChunk", { fg = "#8a8a8a", bold = false })
         end,
       })
 
