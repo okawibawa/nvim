@@ -1,12 +1,40 @@
 return {
   {
-    "xero/miasma.nvim",
-    lazy = false,
+    "ellisonleao/gruvbox.nvim",
     priority = 1000,
     config = function()
-      vim.cmd("colorscheme miasma")
+      require('gruvbox').setup({
+        italic = {
+          strings = false,
+          emphasis = false,
+          comments = false,
+          operators = false,
+          folds = false,
+        }
+      })
+      vim.cmd.colorscheme 'gruvbox'
     end,
   }
+  -- {
+  --   'AlexvZyl/nordic.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require('nordic').setup({
+  --       italic_comments = false,
+  --       bold_keywords = false,
+  --     })
+  --     vim.cmd.colorscheme 'nordic'
+  --   end
+  -- }
+  -- {
+  --   "xero/miasma.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme "miasma"
+  --   end,
+  -- }
   -- {
   --   "wtfox/jellybeans.nvim",
   --   lazy = false,
