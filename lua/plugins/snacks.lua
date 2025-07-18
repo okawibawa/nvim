@@ -15,15 +15,8 @@ return {
         use_devicons = true,
         hidden = true,
         ignored = true,
-      },
-      sources = {
-        files = {},
-        explorer = {
-          win = {
-            list = {
-              keys = {}
-            }
-          }
+        sources = {
+          files = { hidden = true, ignored = true }
         }
       },
       lazygit = {
@@ -306,6 +299,9 @@ N E O V I M
           { section = "keys",   gap = 1, padding = 1 },
           { section = "startup" },
         },
+      },
+      terminal = {
+        enabled = false,
       }
     },
     keys = {
@@ -325,6 +321,46 @@ N E O V I M
       -- Indent keys
       { "<leader>id", function() Snacks.indent.disable() end,      desc = "Disable Indent Guides" },
       { "<leader>ie", function() Snacks.indent.enable() end,       desc = "Enable Indent Guides" },
+
+      -- Terminal
+      -- {
+      --   "<leader>tf",
+      --   function()
+      --     Snacks.terminal.toggle(nil, {
+      --       win = {
+      --         style = "terminal",
+      --         position = "float",
+      --         width = 0.8,
+      --         height = 0.8,
+      --       }
+      --     })
+      --   end,
+      --   desc = "Toggle floating terminal"
+      -- },
+      -- {
+      --   "<leader>th",
+      --   function()
+      --     Snacks.terminal.toggle(nil, {
+      --       win = {
+      --         position = "bottom",
+      --         height = 0.3,
+      --       }
+      --     })
+      --   end,
+      --   desc = "Toggle horizontal terminal"
+      -- },
+      -- {
+      --   "<leader>tv",
+      --   function()
+      --     Snacks.terminal.toggle(nil, {
+      --       win = {
+      --         position = "right",
+      --         width = 0.4,
+      --       }
+      --     })
+      --   end,
+      --   desc = "Toggle vertical terminal"
+      -- },
     },
     init = function()
       vim.api.nvim_create_autocmd("ColorScheme", {
