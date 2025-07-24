@@ -1,20 +1,20 @@
 return {
-  {
-    "ellisonleao/gruvbox.nvim",
-    priority = 1000,
-    config = function()
-      require('gruvbox').setup({
-        italic = {
-          strings = false,
-          emphasis = false,
-          comments = false,
-          operators = false,
-          folds = false,
-        }
-      })
-      vim.cmd.colorscheme 'gruvbox'
-    end,
-  }
+  -- {
+  --   "ellisonleao/gruvbox.nvim",
+  --   priority = 1000,
+  --   config = function()
+  --     require('gruvbox').setup({
+  --       italic = {
+  --         strings = false,
+  --         emphasis = false,
+  --         comments = false,
+  --         operators = false,
+  --         folds = false,
+  --       }
+  --     })
+  --     vim.cmd.colorscheme 'gruvbox'
+  --   end,
+  -- }
   -- {
   --   'AlexvZyl/nordic.nvim',
   --   lazy = false,
@@ -35,20 +35,20 @@ return {
   --     vim.cmd.colorscheme "miasma"
   --   end,
   -- }
-  -- {
-  --   "wtfox/jellybeans.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   opts = {}, -- Optional
-  --   config = function()
-  --     require('jellybeans').setup {
-  --       italics = false,
-  --       bold = false,
-  --     }
+  {
+    "wtfox/jellybeans.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {}, -- Optional
+    config = function()
+      require('jellybeans').setup {
+        italics = false,
+        bold = false,
+      }
 
-  --     vim.cmd.colorscheme 'jellybeans'
-  --   end
-  -- }
+      vim.cmd.colorscheme 'jellybeans-light'
+    end
+  }
   -- {
   --   "arturgoms/moonbow.nvim",
   --   config = function()
@@ -59,8 +59,9 @@ return {
   --   'catppuccin/nvim',
   --   name = 'catppuccin',
   --   priority = 1000,
+  --   opts = {},
   --   config = function()
-  --     vim.cmd.colorscheme 'catppuccin-mocha'
+  --     vim.cmd.colorscheme 'catppuccin-macchiato'
   --   end
   -- },
 }
