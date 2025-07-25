@@ -46,7 +46,7 @@ return {
         bold = false,
       }
 
-      vim.cmd.colorscheme 'jellybeans-light'
+      vim.cmd.colorscheme 'jellybeans'
     end
   }
   -- {
