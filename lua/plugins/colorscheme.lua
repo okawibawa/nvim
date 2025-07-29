@@ -35,33 +35,38 @@ return {
   --     vim.cmd.colorscheme "miasma"
   --   end,
   -- }
-  {
-    "wtfox/jellybeans.nvim",
-    lazy = false,
-    priority = 1000,
-    opts = {}, -- Optional
-    config = function()
-      require('jellybeans').setup {
-        italics = false,
-        bold = false,
-      }
+  -- {
+  --   "wtfox/jellybeans.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {}, -- Optional
+  --   config = function()
+  --     require('jellybeans').setup {
+  --       italics = false,
+  --       bold = false,
+  --     }
 
-      vim.cmd.colorscheme 'jellybeans'
-    end
-  }
+  --     vim.cmd.colorscheme 'jellybeans'
+  --   end
+  -- }
   -- {
   --   "arturgoms/moonbow.nvim",
   --   config = function()
   --     vim.cmd.colorscheme 'moonbow'
   --   end
   -- },
-  -- {
-  --   'catppuccin/nvim',
-  --   name = 'catppuccin',
-  --   priority = 1000,
-  --   opts = {},
-  --   config = function()
-  --     vim.cmd.colorscheme 'catppuccin-macchiato'
-  --   end
-  -- },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    opts = {},
+    config = function()
+      require('catppuccin').setup {
+        no_italic = true,
+        no_bold = true,
+      }
+
+      vim.cmd.colorscheme 'catppuccin-mocha'
+    end
+  },
 }
