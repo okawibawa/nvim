@@ -10,7 +10,7 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'b0o/schemastore.nvim',
       { 'mrjones2014/smart-splits.nvim', opts = {} },
-      { 'j-hui/fidget.nvim',             opts = {} },
+      'j-hui/fidget.nvim',
       'nvimtools/none-ls.nvim',
       'nvim-lua/plenary.nvim'
     },

@@ -23,6 +23,16 @@ local plugins = {
   {
     'junegunn/fzf.vim', event = 'VimEnter', dependencies = { 'junegunn/fzf' }
   },
+  {
+    'j-hui/fidget.nvim',
+    opts = {
+      notification = {
+        window = {
+          winblend = 100,
+        }
+      }
+    }
+  },
 
   -- UI
   require 'plugins.ui',
