@@ -273,28 +273,72 @@ return {
       -- null-ls setup for additional formatting/linting
       null_ls.setup({
         sources = {
-          -- JavaScript/TypeScript
+          -- JavaScript/TypeScript Formatting
           null_ls.builtins.formatting.prettierd.with({
-            filetypes = {
-              "javascript", "javascriptreact", "typescript", "typescriptreact",
-              "vue", "css", "scss", "less", "html", "json", "jsonc", "yaml",
-              "markdown", "graphql", "handlebars"
-            },
+            condition = function(utils)
+              return utils.root_has_file({ ".prettierrc", ".prettierrc.js", ".prettierrc.json", ".prettierrc.yaml",
+                ".prettierrc.yml", "prettier.config.js", "prettier.config.cjs" })
+            end,
+            extra_args = function(params)
+              return { "--config", params.root .. "/.prettierrc" }
+            end,
           }),
+
+          -- JavaScript/TypeScript Diagnostics
           null_ls.builtins.diagnostics.eslint_d,
 
-          -- Go
+          -- Go Formatting
           null_ls.builtins.formatting.gofumpt,
           null_ls.builtins.formatting.goimports,
 
-          -- Python
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.isort,
+          -- Python Formatting
+          null_ls.builtins.formatting.black.with({
+            condition = function(utils)
+              return utils.root_has_file({ "pyproject.toml", "setup.cfg", "tox.ini" })
+            end,
+          }),
+          null_ls.builtins.formatting.isort.with({
+            condition = function(utils)
+              return utils.root_has_file({ "pyproject.toml", "setup.cfg", "tox.ini" })
+            end,
+          }),
 
-          -- Lua
-          null_ls.builtins.formatting.stylua,
+          -- Lua Formatting
+          null_ls.builtins.formatting.stylua.with({
+            condition = function(utils)
+              return utils.root_has_file({ "stylua.toml", ".stylua.toml" })
+            end,
+          }),
+
+          -- JSON Formatting
+          null_ls.builtins.formatting.prettierd.with({
+            filetypes = { "json", "jsonc" },
+          }),
+
+          -- YAML Formatting
+          null_ls.builtins.formatting.prettierd.with({
+            filetypes = { "yaml", "yml" },
+          }),
+
+          -- Markdown Formatting
+          null_ls.builtins.formatting.prettierd.with({
+            filetypes = { "markdown" },
+          }),
         },
-        on_attach = on_attach,
+
+        on_attach = function(client, bufnr)
+          local opts = { buffer = bufnr, silent = true }
+
+          -- Format on save
+          if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format({ async = false })
+              end,
+            })
+          end
+        end,
       })
 
       -- Diagnostic configuration
