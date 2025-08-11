@@ -127,5 +127,27 @@ return {
     dependencies = "nvzone/volt",
     opts = {},
     cmd = { "Typr", "TyprStats" },
+  },
+  {
+    "mistricky/codesnap.nvim",
+    build = "make build_generator",
+    keys = {
+      -- Snapshot
+      { "<leader>cc",  "<cmd>CodeSnap<cr>",              mode = "x", desc = "Save selected code snapshot into clipboard" },
+      { "<leader>cs",  "<cmd>CodeSnapSave<cr>",          mode = "x", desc = "Save selected code snapshot in ~/Pictures" },
+
+      -- Snapshot with highlight
+      { "<leader>cch", "<cmd>CodeSnapHighlight<cr>",     mode = "x", desc = "Save selected code snapshot with highlight into clipboard" },
+      { "<leader>csh", "<cmd>CodeSnapSaveHighlight<cr>", mode = "x", desc = "Save selected code snapshot with highlight in ~/Pictures" },
+    },
+    opts = {
+      bg_theme = "dusk",
+      save_path = "~/Pictures",
+      has_breadcrumbs = true,
+      watermark = "",
+      code_font_family = "Maple Mono",
+      bg_x_padding = 54,
+      bg_y_padding = 14,
+    },
   }
 }
