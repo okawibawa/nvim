@@ -13,11 +13,6 @@ return {
           ['<C-t>'] = 'tabedit',
         },
         use_devicons = true,
-        hidden = true,
-        ignored = true,
-        sources = {
-          files = { hidden = true, ignored = true }
-        }
       },
       lazygit = {
         configure = true,
