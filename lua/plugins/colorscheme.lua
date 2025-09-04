@@ -124,4 +124,17 @@ return {
   --     vim.cmd.colorscheme 'catppuccin-mocha'
   --   end
   -- },
+  -- {
+  --   'sainnhe/everforest',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.g.everforest_better_performance = 1
+  --     vim.g.everforest_background = 'hard'
+  --     -- vim.g.everforest_transparent_background = 2
+  --     vim.g.everforest_ui_contrast = 'low'
+  --     vim.g.everforest_disable_italic_comment = 1
+  --     vim.g.everforest_enable_italic = false
+  --     vim.cmd.colorscheme('everforest')
+  --   end
+  -- }
 }
