@@ -1,388 +1,299 @@
 return {
-  {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'RRethy/vim-illuminate',
-      'nvim-tree/nvim-web-devicons',
-      'nvim-treesitter/nvim-treesitter',
-      'b0o/schemastore.nvim',
-      { 'mrjones2014/smart-splits.nvim', opts = {} },
-      'j-hui/fidget.nvim',
-      'nvimtools/none-ls.nvim',
-      'nvim-lua/plenary.nvim'
-    },
-    config = function()
-      local lspconfig = require('lspconfig')
-      local mason = require('mason')
-      local mason_lspconfig = require('mason-lspconfig')
-      local null_ls = require('null-ls')
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			"RRethy/vim-illuminate",
+			"nvim-tree/nvim-web-devicons",
+			"nvim-treesitter/nvim-treesitter",
+			"b0o/schemastore.nvim",
+			{ "mrjones2014/smart-splits.nvim", opts = {} },
+			"j-hui/fidget.nvim",
+			"nvimtools/none-ls.nvim",
+			"nvim-lua/plenary.nvim",
+		},
+		config = function()
+			local mason = require("mason")
+			local mason_lspconfig = require("mason-lspconfig")
+			local null_ls = require("null-ls")
 
-      -- Mason setup
-      mason.setup({
-        ui = {
-          icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-          }
-        }
-      })
+			-- Mason setup
+			mason.setup({
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			})
 
-      -- LSP servers to install
-      local servers = {
-        'ts_ls',       -- TypeScript/JavaScript
-        'superhtml',   -- HTML
-        'cssls',       -- CSS
-        'tailwindcss', -- Tailwind CSS
-        'jsonls',      -- JSON
-        'gopls',       -- Go
-        'pyright',     -- Python
-        'lua_ls',      -- Lua
-        'eslint',      -- ESLint
-      }
+			-- LSP servers to install
+			local servers = {
+				"ts_ls",
+				"html",
+				"cssls",
+				"tailwindcss",
+				"jsonls",
+				"gopls",
+				"pyright",
+				"lua_ls",
+				"eslint",
+			}
 
-      -- Formatters and linters to install
-      local mason_tool_installer = require('mason-tool-installer')
-      mason_tool_installer.setup({
-        ensure_installed = {
-          'prettierd', -- JS/TS/HTML/CSS formatter
-          'eslint_d',  -- Fast ESLint
-          'gofumpt',   -- Go formatter
-          'goimports', -- Go imports
-          'black',     -- Python formatter
-          'isort',     -- Python import sorter
-          'stylua',    -- Lua formatter
-        },
-        auto_update = false,
-        run_on_start = true,
-      })
+			-- Tools to install
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					"prettierd",
+					"eslint_d",
+					"gofumpt",
+					"goimports",
+					"black",
+					"isort",
+					"stylua",
+				},
+				auto_update = false,
+				run_on_start = true,
+			})
 
-      mason_lspconfig.setup({
-        ensure_installed = servers,
-        automatic_installation = true,
-      })
+			mason_lspconfig.setup({
+				ensure_installed = servers,
+				automatic_installation = true,
+			})
 
-      -- Capabilities for completion
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- LSP attach function
-      local on_attach = function(client, bufnr)
-        local opts = { buffer = bufnr, silent = true }
+			-- IMPORTANT: Decide which tools format which files
+			-- Prettier: JS/TS/HTML/CSS/JSON/Markdown
+			-- LSP: Go, Python, Lua
+			local prettier_formats = {
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+				"html",
+				"css",
+				"scss",
+				"json",
+				"jsonc",
+				"markdown",
+				"yaml",
+			}
 
-        -- Key mappings
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-        -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts) -- Conflicting with navigation keymap
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-        vim.keymap.set('n', '<leader>fm', function()
-          vim.lsp.buf.format({ async = true })
-        end, opts)
+			-- Setup key mappings when LSP attaches
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+				callback = function(event)
+					local client = vim.lsp.get_client_by_id(event.data.client_id)
+					local bufnr = event.buf
 
-        -- Format on save
-        if client:supports_method("textDocument/formatting") then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({ async = false })
-            end,
-          })
-        end
+					-- Disable formatting for JS/TS/HTML/CSS - let Prettier handle it
+					if
+						client
+						and vim.tbl_contains({
+							"ts_ls",
+							"html",
+							"cssls",
+							"jsonls",
+							"eslint",
+							"tailwindcss",
+						}, client.name)
+					then
+						client.server_capabilities.documentFormattingProvider = false
+					end
 
-        -- Highlight references
-        if client:supports_method("textDocument/documentHighlight") then
-          vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-            buffer = bufnr,
-            callback = vim.lsp.buf.document_highlight,
-          })
-          vim.api.nvim_create_autocmd("CursorMoved", {
-            buffer = bufnr,
-            callback = vim.lsp.buf.clear_references,
-          })
-        end
-      end
+					-- Key mappings
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr })
+					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr })
+					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr })
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr })
+					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr })
+					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr })
+					vim.keymap.set("n", "<leader>fm", function()
+						vim.lsp.buf.format({ async = true })
+					end, { buffer = bufnr })
 
-      -- TypeScript/JavaScript
-      lspconfig.ts_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          typescript = {
-            inlayHints = {
-              includeInlayParameterNameHints = 'all',
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
-            }
-          },
-          javascript = {
-            inlayHints = {
-              includeInlayParameterNameHints = 'all',
-              includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayEnumMemberValueHints = true,
-            }
-          }
-        }
-      })
+					-- ESLint auto-fix on save
+					if client and client.name == "eslint" then
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							buffer = bufnr,
+							callback = function()
+								vim.lsp.buf.code_action({
+									context = { only = { "source.fixAll.eslint" }, diagnostics = {} },
+									apply = true,
+								})
+							end,
+						})
+					end
 
-      -- HTML
-      lspconfig.html.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-      })
+					-- Document highlight
+					if client and client.supports_method("textDocument/documentHighlight") then
+						local hl_group = vim.api.nvim_create_augroup("lsp-highlight-" .. bufnr, {})
+						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+							buffer = bufnr,
+							group = hl_group,
+							callback = vim.lsp.buf.document_highlight,
+						})
+						vim.api.nvim_create_autocmd("CursorMoved", {
+							buffer = bufnr,
+							group = hl_group,
+							callback = vim.lsp.buf.clear_references,
+						})
+					end
+				end,
+			})
 
-      -- CSS
-      lspconfig.cssls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          css = {
-            validate = true,
-            lint = {
-              unknownAtRules = "ignore"
-            }
-          },
-          scss = {
-            validate = true,
-            lint = {
-              unknownAtRules = "ignore"
-            }
-          },
-          less = {
-            validate = true,
-            lint = {
-              unknownAtRules = "ignore"
-            }
-          }
-        }
-      })
+			-- Configure each LSP server
+			vim.lsp.config("ts_ls", {
+				capabilities = capabilities,
+				settings = {
+					typescript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "all",
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = true,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+						},
+					},
+					javascript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "all",
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = true,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+						},
+					},
+				},
+			})
 
-      -- Tailwind CSS
-      lspconfig.tailwindcss.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        filetypes = {
-          'html', 'css', 'scss', 'javascript', 'javascriptreact',
-          'typescript', 'typescriptreact', 'vue', 'svelte'
-        },
-        settings = {
-          tailwindCSS = {
-            experimental = {
-              classRegex = {
-                "tw`([^`]*)",
-                "tw=\"([^\"]*)",
-                "tw={\"([^\"}]*)",
-                "tw\\.\\w+`([^`]*)",
-                "tw\\(.*?\\)`([^`]*)",
-              },
-            },
-          },
-        },
-      })
+			vim.lsp.config("html", { capabilities = capabilities })
 
-      -- JSON with schema support
-      lspconfig.jsonls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          json = {
-            schemas = require('schemastore').json.schemas(),
-            validate = { enable = true },
-          },
-        },
-      })
+			vim.lsp.config("cssls", {
+				capabilities = capabilities,
+				settings = {
+					css = { lint = { unknownAtRules = "ignore" } },
+					scss = { lint = { unknownAtRules = "ignore" } },
+					less = { lint = { unknownAtRules = "ignore" } },
+				},
+			})
 
-      -- Go
-      lspconfig.gopls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          gopls = {
-            analyses = {
-              unusedparams = true,
-            },
-            staticcheck = true,
-            gofumpt = true,
-          },
-        },
-      })
+			vim.lsp.config("tailwindcss", {
+				capabilities = capabilities,
+				filetypes = {
+					"html",
+					"css",
+					"scss",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+				},
+			})
 
-      -- Python
-      lspconfig.pyright.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          python = {
-            analysis = {
-              autoSearchPaths = true,
-              diagnosticMode = "workspace",
-              useLibraryCodeForTypes = true
-            }
-          }
-        }
-      })
+			vim.lsp.config("jsonls", {
+				capabilities = capabilities,
+				settings = {
+					json = {
+						schemas = require("schemastore").json.schemas(),
+						validate = { enable = true },
+					},
+				},
+			})
 
-      -- Lua
-      lspconfig.lua_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            runtime = {
-              version = 'LuaJIT',
-            },
-            diagnostics = {
-              globals = { 'vim' },
-            },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-            },
-            telemetry = {
-              enable = false,
-            },
-          },
-        },
-      })
+			vim.lsp.config("gopls", {
+				capabilities = capabilities,
+				settings = {
+					gopls = {
+						analyses = { unusedparams = true },
+						staticcheck = true,
+						gofumpt = true,
+					},
+				},
+			})
 
-      -- ESLint
-      lspconfig.eslint.setup({
-        on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
-          -- Auto-fix on save
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            command = "EslintFixAll",
-          })
-        end,
-        capabilities = capabilities,
-      })
+			vim.lsp.config("pyright", { capabilities = capabilities })
 
-      -- null-ls setup for additional formatting/linting
-      null_ls.setup({
-        sources = {
-          -- JavaScript/TypeScript Formatting
-          null_ls.builtins.formatting.prettierd.with({
-            condition = function(utils)
-              return utils.root_has_file({ ".prettierrc", ".prettierrc.js", ".prettierrc.json", ".prettierrc.yaml",
-                ".prettierrc.yml", "prettier.config.js", "prettier.config.cjs" })
-            end,
-            extra_args = function(params)
-              return { "--config", params.root .. "/.prettierrc" }
-            end,
-          }),
+			vim.lsp.config("lua_ls", {
+				capabilities = capabilities,
+				settings = {
+					Lua = {
+						runtime = { version = "LuaJIT" },
+						diagnostics = { globals = { "vim" } },
+						workspace = {
+							library = vim.api.nvim_get_runtime_file("", true),
+						},
+						telemetry = { enable = false },
+					},
+				},
+			})
 
-          -- JavaScript/TypeScript Diagnostics
-          null_ls.builtins.diagnostics.eslint_d,
+			vim.lsp.config("eslint", { capabilities = capabilities })
 
-          -- Go Formatting
-          null_ls.builtins.formatting.gofumpt,
-          null_ls.builtins.formatting.goimports,
+			-- Enable all servers
+			vim.lsp.enable(servers)
 
-          -- Python Formatting
-          null_ls.builtins.formatting.black.with({
-            condition = function(utils)
-              return utils.root_has_file({ "pyproject.toml", "setup.cfg", "tox.ini" })
-            end,
-          }),
-          null_ls.builtins.formatting.isort.with({
-            condition = function(utils)
-              return utils.root_has_file({ "pyproject.toml", "setup.cfg", "tox.ini" })
-            end,
-          }),
+			-- null-ls: Only for formatting
+			null_ls.setup({
+				sources = {
+					-- Prettier for JS/TS/HTML/CSS/JSON/etc
+					null_ls.builtins.formatting.prettierd.with({
+						filetypes = prettier_formats,
+					}),
 
-          -- Lua Formatting
-          null_ls.builtins.formatting.stylua.with({
-            condition = function(utils)
-              return utils.root_has_file({ "stylua.toml", ".stylua.toml" })
-            end,
-          }),
+					-- Go formatting
+					null_ls.builtins.formatting.gofumpt,
+					null_ls.builtins.formatting.goimports,
 
-          -- JSON Formatting
-          null_ls.builtins.formatting.prettierd.with({
-            filetypes = { "json", "jsonc" },
-          }),
+					-- Python formatting
+					null_ls.builtins.formatting.black,
+					null_ls.builtins.formatting.isort,
 
-          -- YAML Formatting
-          null_ls.builtins.formatting.prettierd.with({
-            filetypes = { "yaml", "yml" },
-          }),
+					-- Lua formatting
+					null_ls.builtins.formatting.stylua,
+				},
+			})
 
-          -- Markdown Formatting
-          null_ls.builtins.formatting.prettierd.with({
-            filetypes = { "markdown" },
-          }),
-        },
+			-- Format on save (uses null-ls for JS/TS/etc, LSP for Go/Python/Lua)
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = vim.api.nvim_create_augroup("format-on-save", { clear = true }),
+				callback = function()
+					vim.lsp.buf.format({ async = false, timeout_ms = 2000 })
+				end,
+			})
 
-        on_attach = function(client, bufnr)
-          local opts = { buffer = bufnr, silent = true }
+			-- Diagnostic signs
+			local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+			local signs_text = {}
+			for type, icon in pairs(signs) do
+				signs_text[vim.diagnostic.severity[type:upper()]] = icon
+			end
 
-          -- Format on save
-          if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.format({ async = false })
-              end,
-            })
-          end
-        end,
-      })
+			vim.diagnostic.config({
+				virtual_text = { prefix = "●" },
+				signs = { text = signs_text },
+				underline = true,
+				update_in_insert = false,
+				severity_sort = true,
+				float = {
+					border = "rounded",
+					source = "always",
+				},
+			})
 
-      -- Diagnostic configuration
-      vim.diagnostic.config({
-        virtual_text = {
-          prefix = '●',
-        },
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-        float = {
-          border = 'rounded',
-          source = 'always',
-          header = '',
-          prefix = '',
-        },
-      })
-
-      -- Diagnostic signs
-      local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-      vim.diagnostic.config({
-        virtual_text = {
-          prefix = '●',
-        },
-        signs = {
-          text = signs_icons,
-        },
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-        float = {
-          border = 'rounded',
-          source = 'always',
-          header = '',
-          prefix = '',
-        },
-      })
-
-      -- Global key mappings
-      vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1, float = true }) end)
-      vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1, float = true }) end)
-      vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist)
-    end
-  }
+			-- Diagnostic keymaps
+			vim.keymap.set("n", "<leader>de", vim.diagnostic.open_float)
+			vim.keymap.set("n", "[d", function()
+				vim.diagnostic.jump({ count = -1, float = true })
+			end)
+			vim.keymap.set("n", "]d", function()
+				vim.diagnostic.jump({ count = 1, float = true })
+			end)
+			vim.keymap.set("n", "<leader>dq", vim.diagnostic.setloclist)
+		end,
+	},
 }
