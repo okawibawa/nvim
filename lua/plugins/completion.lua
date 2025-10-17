@@ -1,32 +1,32 @@
 return {
 	{
-		'L3MON4D3/LuaSnip',
+		"L3MON4D3/LuaSnip",
 		build = "make install_jsregexp",
 		config = function()
-			require('luasnip.loaders.from_vscode').lazy_load()
+			require("luasnip.loaders.from_vscode").lazy_load()
 
-			local luasnip = require 'luasnip'
+			local luasnip = require("luasnip")
 
 			luasnip.config.set_config({
 				history = true,
-				updateevents = 'TextChanged,TextChangedI',
+				updateevents = "TextChanged,TextChangedI",
 				enable_autosnippets = true,
 			})
 		end,
 	},
-	{ 'saadparwaiz1/cmp_luasnip' },
+	{ "saadparwaiz1/cmp_luasnip" },
 	{
-		'hrsh7th/nvim-cmp',
+		"hrsh7th/nvim-cmp",
 		dependencies = {
-			'L3MON4D3/LuaSnip',
-			'hrsh7th/cmp-nvim-lsp',
-			'hrsh7th/cmp-buffer',
-			'hrsh7th/cmp-path',
-			'saadparwaiz1/cmp_luasnip',
+			"L3MON4D3/LuaSnip",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"saadparwaiz1/cmp_luasnip",
 		},
 		config = function()
-			local cmp = require('cmp')
-			local luasnip = require('luasnip')
+			local cmp = require("cmp")
+			local luasnip = require("luasnip")
 
 			cmp.setup({
 				snippet = {
@@ -36,13 +36,13 @@ return {
 				},
 
 				mapping = cmp.mapping.preset.insert({
-					['<C-b>'] = cmp.mapping.scroll_docs(-4),
-					['<C-f>'] = cmp.mapping.scroll_docs(4),
-					['<C-Space>'] = cmp.mapping.complete(),
-					['<C-e>'] = cmp.mapping.abort(),
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
 
-					['<Tab>'] = cmp.mapping(function(fallback)
+					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
 						elseif luasnip.expand_or_jumpable() then
@@ -50,9 +50,9 @@ return {
 						else
 							fallback()
 						end
-					end, { 'i', 's' }),
+					end, { "i", "s" }),
 
-					['<S-Tab>'] = cmp.mapping(function(fallback)
+					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
 						elseif luasnip.jumpable(-1) then
@@ -60,15 +60,15 @@ return {
 						else
 							fallback()
 						end
-					end, { 'i', 's' }),
+					end, { "i", "s" }),
 				}),
 
 				sources = cmp.config.sources({
-					{ name = 'nvim_lsp' },
-					{ name = 'luasnip' },
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
 				}, {
-					{ name = 'buffer' },
-					{ name = 'path' },
+					{ name = "buffer" },
+					{ name = "path" },
 				}),
 
 				formatting = {
@@ -101,8 +101,7 @@ return {
 							TypeParameter = "󰅲",
 						}
 
-						vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind],
-							vim_item.kind)
+						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
 						vim_item.menu = ({
 							nvim_lsp = "[LSP]",
 							luasnip = "[Snippet]",
@@ -111,7 +110,7 @@ return {
 						})[entry.source.name]
 
 						return vim_item
-					end
+					end,
 				},
 
 				window = {
@@ -123,6 +122,6 @@ return {
 					ghost_text = true,
 				},
 			})
-		end
+		end,
 	},
 }

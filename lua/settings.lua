@@ -2,14 +2,14 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- Set the leader key to space for easier keybindings
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Flag to indicate if Nerd Fonts are available (useful for plugins like icons)
 vim.g.have_nerd_font = true
 
 -- Fixes an error with Bun (JavaScript runtime) where it cannot find modules
-vim.opt.backupcopy = 'yes'
+vim.opt.backupcopy = "yes"
 
 -- Enable true color support in the terminal
 vim.opt.termguicolors = true
@@ -31,7 +31,7 @@ vim.opt.showmode = false
 
 -- Use the system clipboard for copy/paste operations
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+	vim.opt.clipboard = "unnamedplus"
 end)
 
 -- Enable break indent for better readability of wrapped lines
@@ -46,7 +46,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Always show the sign column (e.g., for diagnostics, git changes)
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
 
 -- Set the timeout length for mapped sequences (in milliseconds)
 vim.opt.timeoutlen = 250
@@ -57,10 +57,10 @@ vim.opt.splitbelow = true
 
 -- Enable display of invisible characters (e.g., tabs, trailing spaces)
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Show live preview of substitutions
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = "split"
 
 -- Highlight the current line for better focus
 vim.opt.cursorline = true
@@ -69,32 +69,38 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- Keybinding: Exit insert mode by pressing 'jk'
-vim.keymap.set('i', 'jk', '<ESC>', { noremap = true })
+vim.keymap.set("i", "jk", "<ESC>", { noremap = true })
 
 -- Keybinding: Clear search highlights by pressing Escape in normal mode
-vim.keymap.set('n', '<ESC>', '<cmd>nohlsearch<CR>')
+vim.keymap.set("n", "<ESC>", "<cmd>nohlsearch<CR>")
 
 -- Keybindings: Cycle through buffers using Tab and Shift-Tab
-vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>')
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>')
+vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>")
+vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>")
 
 -- Keybindings: Navigate between windows using Ctrl + h/j/k/l
-vim.keymap.set('n', '<C-h>', '<cmd>wincmd h<CR>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<cmd>wincmd l<CR>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<cmd>wincmd j<CR>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<cmd>wincmd k<CR>', { desc = 'Move focus to the upper window' })
+vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<CR>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { desc = "Move focus to the upper window" })
 
 -- vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { desc = 'Close current buffer' })
-vim.keymap.set("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
-vim.keymap.set("n", "<leader>ba", function() Snacks.bufdelete.all() end, { desc = "Delete All Buffers" })
+vim.keymap.set("n", "<leader>bd", function()
+	Snacks.bufdelete()
+end, { desc = "Delete Buffer" })
+vim.keymap.set("n", "<leader>bo", function()
+	Snacks.bufdelete.other()
+end, { desc = "Delete Other Buffers" })
+vim.keymap.set("n", "<leader>ba", function()
+	Snacks.bufdelete.all()
+end, { desc = "Delete All Buffers" })
 
 -- Tabs
-vim.keymap.set('n', '<leader>tn', '<cmd>tabnext<CR>', { desc = 'Next Tab' })
-vim.keymap.set('n', '<leader>tp', '<cmd>tabprevious<CR>', { desc = 'Previous Tab' })
-vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<CR>', { desc = 'Close Tab' })
-vim.keymap.set('n', '<leader>to', '<cmd>tabonly<CR>', { desc = 'Close Other Tabs' })
-vim.keymap.set('n', '<leader>tt', '<cmd>tabnew<CR>', { desc = 'New tab' })
+vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "Next Tab" })
+vim.keymap.set("n", "<leader>tp", "<cmd>tabprevious<CR>", { desc = "Previous Tab" })
+vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<CR>", { desc = "Close Tab" })
+vim.keymap.set("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "Close Other Tabs" })
+vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "New tab" })
 
 -- FZF Keymaps
 -- vim.keymap.set('n', '<leader>ff', '<cmd>Files<CR>', { desc = 'Find Files (FZF)' })
