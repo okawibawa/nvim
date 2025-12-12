@@ -48,8 +48,9 @@ return {
 			vim.g.gruvbox_material_float_style = "dim"
 			vim.g.gruvbox_material_disable_italic_comment = 1
 			vim.g.gruvbox_material_enable_italic = 0
-			vim.g.gruvbox_material_transparent_background = 2
+			vim.g.gruvbox_material_transparent_background = 0
 
+			-- vim.o.background = "light"
 			vim.cmd.colorscheme("gruvbox-material")
 		end,
 	},
@@ -220,5 +221,45 @@ return {
 	--   config = function()
 	--     vim.cmd 'colorscheme monochrome'
 	--   end
+	-- },
+	-- {
+	--   'mellow-theme/mellow.nvim',
+	--   lazy = false,
+	--   priority = 1000,
+	--   config = function()
+	--     vim.cmd.colorscheme("mellow")
+	--   end,
+	-- },
+	-- {
+	-- 	"vague-theme/vague.nvim",
+	-- 	lazy = false, -- make sure we load this during startup if it is your main colorscheme
+	-- 	priority = 1000, -- make sure to load this before all the other plugins
+	-- 	config = function()
+	-- 		-- NOTE: you do not need to call setup if you don't want to.
+	-- 		require("vague").setup({
+	-- 			-- optional configuration here
+	-- 		})
+	-- 		vim.cmd("colorscheme vague")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"jpwol/thorn.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("thorn").setup({
+	-- 			theme = "dark",
+	-- 			background = "warm",
+	-- 		})
+	-- 		vim.cmd.colorscheme("thorn")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"cranberry-clockworks/coal.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("coal")
+	-- 	end,
 	-- },
 }
