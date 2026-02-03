@@ -261,7 +261,6 @@ return {
 			-- DIAGNOSTICS CONFIGURATION
 			-- =============================================================================
 
-			vim.opt.winborder = "rounded"
 			vim.diagnostic.config({
 				signs = {
 					text = {
@@ -322,9 +321,6 @@ return {
 					null_ls.builtins.formatting.goimports,
 					null_ls.builtins.formatting.stylua,
 				},
-				on_attach = function(client, bufnr)
-					vim.notify("null-ls attached to buffer " .. bufnr, vim.log.levels.DEBUG)
-				end,
 			})
 		end,
 	},

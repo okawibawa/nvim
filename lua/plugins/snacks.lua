@@ -403,12 +403,6 @@ N E O V I M
 					--           ]]
 				},
 				formats = {
-					icon = function(item)
-						if item.file and item.icon == "file" or item.icon == "directory" then
-							return M.icon(item.file, item.icon)
-						end
-						return { item.icon, width = 2, hl = "icon" }
-					end,
 					footer = { "%s", align = "center" },
 					header = { "%s", align = "center" },
 					file = function(item, ctx)
@@ -486,6 +480,29 @@ N E O V I M
 					Snacks.picker.smart()
 				end,
 				desc = "Explorer",
+			},
+
+			-- Buffer delete keys
+			{
+				"<leader>bd",
+				function()
+					Snacks.bufdelete()
+				end,
+				desc = "Delete Buffer",
+			},
+			{
+				"<leader>bo",
+				function()
+					Snacks.bufdelete.other()
+				end,
+				desc = "Delete Other Buffers",
+			},
+			{
+				"<leader>ba",
+				function()
+					Snacks.bufdelete.all()
+				end,
+				desc = "Delete All Buffers",
 			},
 
 			-- Lazygit keys

@@ -54,6 +54,7 @@ vim.opt.timeoutlen = 250
 -- Open new vertical splits to the right and horizontal splits below
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.winborder = "rounded"
 
 -- Enable display of invisible characters (e.g., tabs, trailing spaces)
 vim.opt.list = true
@@ -75,8 +76,8 @@ vim.keymap.set("i", "jk", "<ESC>", { noremap = true })
 vim.keymap.set("n", "<ESC>", "<cmd>nohlsearch<CR>")
 
 -- Keybindings: Cycle through buffers using Tab and Shift-Tab
-vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>")
-vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>")
+vim.keymap.set("n", "<Tab>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "<S-Tab>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 
 -- Keybindings: Navigate between windows using Ctrl + h/j/k/l
 vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<CR>", { desc = "Move focus to the left window" })
@@ -84,29 +85,9 @@ vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>", { desc = "Move focus to the ri
 vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>", { desc = "Move focus to the upper window" })
 
--- vim.keymap.set('n', '<leader>x', '<cmd>bd<CR>', { desc = 'Close current buffer' })
-vim.keymap.set("n", "<leader>bd", function()
-	Snacks.bufdelete()
-end, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<leader>bo", function()
-	Snacks.bufdelete.other()
-end, { desc = "Delete Other Buffers" })
-vim.keymap.set("n", "<leader>ba", function()
-	Snacks.bufdelete.all()
-end, { desc = "Delete All Buffers" })
-
 -- Tabs
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnext<CR>", { desc = "Next Tab" })
 vim.keymap.set("n", "<leader>tp", "<cmd>tabprevious<CR>", { desc = "Previous Tab" })
 vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<CR>", { desc = "Close Tab" })
 vim.keymap.set("n", "<leader>to", "<cmd>tabonly<CR>", { desc = "Close Other Tabs" })
 vim.keymap.set("n", "<leader>tt", "<cmd>tabnew<CR>", { desc = "New tab" })
-
--- FZF Keymaps
--- vim.keymap.set('n', '<leader>ff', '<cmd>Files<CR>', { desc = 'Find Files (FZF)' })
--- vim.keymap.set('n', '<leader>fg', '<cmd>GitFiles<CR>', { desc = 'Find Git Files (FZF)' })
--- vim.keymap.set('n', '<leader>fb', '<cmd>Buffers<CR>', { desc = 'Find Buffers (FZF)' })
--- vim.keymap.set('n', '<leader>fw', '<cmd>Rg<CR>', { desc = 'Grep for word (FZF)' })
--- vim.keymap.set('n', '<leader>fc', '<cmd>Commands<CR>', { desc = 'FZF Commands' })
--- vim.keymap.set('n', '<leader>fh', '<cmd>Helptags<CR>', { desc = 'FZF Helptags' })
--- vim.keymap.set('n', '<leader>fl', '<cmd>BLines<CR>', { desc = 'FZF Buffer Lines' })

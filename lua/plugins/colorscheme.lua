@@ -262,4 +262,12 @@ return {
 	-- 		vim.cmd.colorscheme("coal")
 	-- 	end,
 	-- },
+	-- {
+	-- 	"serhez/teide.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("teide-dark")
+	-- 	end,
+	-- },
 }

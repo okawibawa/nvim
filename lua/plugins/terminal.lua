@@ -34,6 +34,13 @@ return {
 		},
 		keys = {
 			{
+				"<leader>t",
+				function()
+					require("toggleterm").toggle(0, nil, vim.fn.getcwd(), "float")
+				end,
+				desc = "Toggle terminal (quick)",
+			},
+			{
 				"<leader>tf",
 				function()
 					require("toggleterm").toggle(0, nil, vim.fn.getcwd(), "float")
@@ -61,10 +68,72 @@ return {
 				desc = "Exit terminal insert mode",
 			},
 			{
+				"<C-h>",
+				"<C-\\><C-n><C-w>h",
+				mode = "t",
+				desc = "Go to left window",
+			},
+			{
+				"<C-j>",
+				"<C-\\><C-n><C-w>j",
+				mode = "t",
+				desc = "Go to bottom window",
+			},
+			{
+				"<C-k>",
+				"<C-\\><C-n><C-w>k",
+				mode = "t",
+				desc = "Go to top window",
+			},
+			{
+				"<C-l>",
+				"<C-\\><C-n><C-w>l",
+				mode = "t",
+				desc = "Go to right window",
+			},
+			{
 				"<C-c>",
 				"<C-c>",
 				mode = "t",
 				desc = "Send Ctrl+C to terminal process",
+			},
+			{
+				"<leader>t1",
+				function()
+					require("toggleterm").toggle(1)
+				end,
+				desc = "Toggle terminal 1",
+			},
+			{
+				"<leader>t2",
+				function()
+					require("toggleterm").toggle(2)
+				end,
+				desc = "Toggle terminal 2",
+			},
+			{
+				"<leader>t3",
+				function()
+					require("toggleterm").toggle(3)
+				end,
+				desc = "Toggle terminal 3",
+			},
+			{
+				"<leader>tg",
+				function()
+					local Terminal = require("toggleterm.terminal").Terminal
+					local lazygit = Terminal:new({
+						cmd = "lazygit",
+						dir = "git_dir",
+						direction = "float",
+						float_opts = { border = "rounded" },
+						on_open = function(term)
+							vim.cmd("startinsert!")
+						end,
+					})
+					lazygit:toggle()
+				end,
+				desc = "Open lazygit",
 			},
 			{
 				"<leader>tc",
