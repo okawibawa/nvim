@@ -56,6 +56,7 @@ return {
 					"gofumpt", -- Go formatter
 					"goimports", -- Go imports
 					"stylua", -- Lua formatter
+					"black", -- Python formatter
 					"ruff",
 				},
 				auto_update = false,
@@ -114,7 +115,7 @@ return {
 				end,
 			})
 
-			-- Format on save: single global autocmd, only none-ls formatters, scoped by file pattern
+			-- Format on save: single global autocmd; null-ls for web/astro/python, gopls for Go
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
 				pattern = {
@@ -127,15 +128,31 @@ return {
 					"*.scss",
 					"*.md",
 					"*.html",
+					"*.astro",
 					"*.lua",
+					"*.py",
 					"*.go",
 				},
 				callback = function(args)
+					local bufnr = args.buf
 					vim.lsp.buf.format({
-						bufnr = args.buf,
+						bufnr = bufnr,
 						async = false,
 						timeout_ms = 2000,
 						filter = function(client)
+							local ft = vim.bo[bufnr].filetype
+							if ft == "go" then
+								return client.name == "gopls"
+							elseif ft == "python" then
+								-- Prefer null-ls (Black) when available; fall back to ruff formatting
+								if client.name == "null-ls" then
+									return true
+								end
+								if client.name == "ruff" then
+									return true
+								end
+								return false
+							end
 							return client.name == "null-ls"
 						end,
 					})
@@ -225,7 +242,7 @@ return {
 					python = {
 						analysis = {
 							autoSearchPaths = true,
-							diagnosticMode = "workspace",
+							diagnosticMode = "openFilesOnly", -- faster; use "workspace" only when you need cross-file analysis
 							useLibraryCodeForTypes = true,
 						},
 					},
@@ -336,6 +353,7 @@ return {
 					null_ls.builtins.formatting.gofumpt,
 					null_ls.builtins.formatting.goimports,
 					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.formatting.black,
 				},
 			})
 		end,
