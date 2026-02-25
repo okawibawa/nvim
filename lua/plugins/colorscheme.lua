@@ -126,18 +126,18 @@ return {
 	--   end
 	-- },
 	-- {
-	--   'sainnhe/everforest',
-	--   priority = 1000,
-	--   config = function()
-	--     vim.g.everforest_better_performance = 1
-	--     vim.g.everforest_background = 'hard'
-	--     vim.g.everforest_transparent_background = 2
-	--     vim.g.everforest_ui_contrast = 'low'
-	--     vim.g.everforest_disable_italic_comment = 1
-	--     vim.g.everforest_enable_italic = false
-	--     vim.cmd.colorscheme('everforest')
-	--   end
-	-- }
+	-- 	"sainnhe/everforest",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.g.everforest_better_performance = 1
+	-- 		vim.g.everforest_background = "hard"
+	-- 		vim.g.everforest_transparent_background = 2
+	-- 		vim.g.everforest_ui_contrast = "low"
+	-- 		vim.g.everforest_disable_italic_comment = 1
+	-- 		vim.g.everforest_enable_italic = false
+	-- 		vim.cmd.colorscheme("everforest")
+	-- 	end,
+	-- },
 	-- {
 	--   "dgox16/oldworld.nvim",
 	--   lazy = false,
@@ -270,13 +270,22 @@ return {
 	-- 		vim.cmd.colorscheme("teide-dark")
 	-- 	end,
 	-- },
+	-- {
+	-- 	"craftzdog/solarized-osaka.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {},
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("solarized-osaka")
+	-- 	end,
+	-- },
 	{
-		"craftzdog/solarized-osaka.nvim",
+		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
 		opts = {},
 		config = function()
-			vim.cmd.colorscheme("solarized-osaka")
+			vim.cmd.colorscheme("tokyonight-storm")
 		end,
 	},
 }
