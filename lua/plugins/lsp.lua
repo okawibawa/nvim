@@ -45,7 +45,6 @@ return {
 				"gopls", -- Go
 				"pyright", -- Python
 				"lua_ls", -- Lua
-				"eslint", -- ESLint
 				"ruff", -- Python
 			}
 
@@ -82,6 +81,11 @@ return {
 						return
 					end
 
+					-- JS/TS formatting is handled by none-ls (prettierd) only
+					if client.name == "ts_ls" then
+						client.server_capabilities.documentFormattingProvider = false
+					end
+
 					local opts = { buffer = bufnr, silent = true }
 
 					-- Key mappings
@@ -107,30 +111,34 @@ return {
 							callback = vim.lsp.buf.clear_references,
 						})
 					end
+				end,
+			})
 
-					if client:supports_method("textDocument/formatting") then
-						if not vim.b[bufnr].format_on_save_set then
-							vim.api.nvim_create_autocmd("BufWritePre", {
-								buffer = bufnr,
-								group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, { clear = true }),
-								callback = function()
-									local eslint_client = vim.lsp.get_clients({
-										name = "eslint",
-										bufnr = bufnr,
-									})[1]
-									if eslint_client then
-										vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", {
-											command = "eslint.applyAllFixes",
-											arguments = { vim.uri_from_bufnr(bufnr) },
-										}, 1000)
-									end
-
-									vim.lsp.buf.format({ async = false, bufnr = bufnr })
-								end,
-							})
-							vim.b[bufnr].format_on_save_set = true
-						end
-					end
+			-- Format on save: single global autocmd, only none-ls formatters, scoped by file pattern
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
+				pattern = {
+					"*.js",
+					"*.jsx",
+					"*.ts",
+					"*.tsx",
+					"*.json",
+					"*.css",
+					"*.scss",
+					"*.md",
+					"*.html",
+					"*.lua",
+					"*.go",
+				},
+				callback = function(args)
+					vim.lsp.buf.format({
+						bufnr = args.buf,
+						async = false,
+						timeout_ms = 2000,
+						filter = function(client)
+							return client.name == "null-ls"
+						end,
+					})
 				end,
 			})
 
@@ -251,9 +259,6 @@ return {
 				},
 			}
 
-			-- THE FIX: The entire vim.lsp.config.eslint block is now removed.
-			-- Its functionality is handled by the global LspAttach autocmd above.
-
 			-- Finally, enable all the LSP servers we've configured.
 			vim.lsp.enable(servers)
 
@@ -296,19 +301,30 @@ return {
 			-- NONE-LS CONFIGURATION
 			-- =============================================================================
 
+			-- Prettier: use project config when present, else Neovim defaults
+			local null_ls_utils = require("null-ls.utils")
+			local prettier_root_pattern = null_ls_utils.root_pattern(
+				".prettierrc",
+				".prettierrc.js",
+				".prettierrc.json",
+				".prettierrc.yaml",
+				".prettierrc.yml",
+				"prettier.config.js",
+				"prettier.config.cjs"
+			)
 			null_ls.setup({
 				sources = {
+					-- Prettier when project has its own config (no overrides)
 					null_ls.builtins.formatting.prettierd.with({
-						-- condition = function(utils)
-						--   return utils.root_has_file({
-						--     ".prettierrc",
-						--     ".prettierrc.js",
-						--     ".prettierrc.json",
-						--     ".prettierrc.yaml",
-						--     ".prettierrc.yml",
-						--     "prettier.config.js",
-						--     "prettier.config.cjs" })
-						-- end,
+						condition = function()
+							return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) ~= nil
+						end,
+					}),
+					-- Default Prettier options when project has no config (print-width=100, etc.)
+					null_ls.builtins.formatting.prettierd.with({
+						condition = function()
+							return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) == nil
+						end,
 						extra_args = {
 							"--print-width=100",
 							"--tab-width=2",
