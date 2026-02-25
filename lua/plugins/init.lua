@@ -20,7 +20,7 @@ local plugins = {
 	},
 	{
 		"junegunn/fzf.vim",
-		event = "VimEnter",
+		cmd = { "Files", "Rg", "Buffers", "Lines", "BLines", "History", "Commits" },
 		dependencies = { "junegunn/fzf" },
 	},
 	{

@@ -329,33 +329,52 @@ return {
 				"prettier.config.js",
 				"prettier.config.cjs"
 			)
-			null_ls.setup({
-				sources = {
-					-- Prettier when project has its own config (no overrides)
-					null_ls.builtins.formatting.prettierd.with({
-						condition = function()
-							return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) ~= nil
-						end,
-					}),
-					-- Default Prettier options when project has no config (print-width=100, etc.)
-					null_ls.builtins.formatting.prettierd.with({
-						condition = function()
-							return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) == nil
-						end,
-						extra_args = {
-							"--print-width=100",
-							"--tab-width=2",
-							"--single-quote",
-							"--trailing-comma=all",
-						},
-					}),
-					null_ls.builtins.diagnostics.eslint_d,
-					null_ls.builtins.formatting.gofumpt,
-					null_ls.builtins.formatting.goimports,
-					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.black,
-				},
-			})
+			local eslint_root_pattern = null_ls_utils.root_pattern(
+				".eslintrc",
+				".eslintrc.js",
+				".eslintrc.cjs",
+				".eslintrc.yaml",
+				".eslintrc.yml",
+				".eslintrc.json",
+				"eslint.config.js",
+				"eslint.config.mjs",
+				"eslint.config.cjs",
+				"package.json"
+			)
+			local sources = {
+				-- Prettier when project has its own config (no overrides)
+				null_ls.builtins.formatting.prettierd.with({
+					condition = function()
+						return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) ~= nil
+					end,
+				}),
+				-- Default Prettier options when project has no config (print-width=100, etc.)
+				null_ls.builtins.formatting.prettierd.with({
+					condition = function()
+						return prettier_root_pattern(vim.api.nvim_buf_get_name(0)) == nil
+					end,
+					extra_args = {
+						"--print-width=100",
+						"--tab-width=2",
+						"--single-quote",
+						"--trailing-comma=all",
+					},
+				}),
+				null_ls.builtins.formatting.gofumpt,
+				null_ls.builtins.formatting.goimports,
+				null_ls.builtins.formatting.stylua,
+				null_ls.builtins.formatting.black,
+			}
+			-- ESLint diagnostics only if the builtin exists (none-ls fork may not ship it; use none-ls-extras for eslint)
+			local ok_eslint, eslint_d_builtin = pcall(require, "null-ls.builtins.diagnostics.eslint_d")
+			if ok_eslint and eslint_d_builtin then
+				sources[#sources + 1] = eslint_d_builtin.with({
+					condition = function()
+						return eslint_root_pattern(vim.api.nvim_buf_get_name(0)) ~= nil
+					end,
+				})
+			end
+			null_ls.setup({ sources = sources })
 		end,
 	},
 }

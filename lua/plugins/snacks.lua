@@ -63,11 +63,10 @@ return {
 					"SnacksIndent8",
 				},
 				animate = {
-					enabled = true,
-					duration = 75,
+					enabled = false, -- smoother scrolling
 				},
 				chunk = {
-					enabled = true,
+					enabled = false, -- lighter indent display
 					char = {
 						corner_top = "╭",
 						corner_bottom = "╰",
@@ -89,7 +88,7 @@ return {
 				end,
 			},
 			image = {
-				enabled = true,
+				enabled = false, -- not used on macOS; use yazi elsewhere for images
 
 				formats = {
 					"png",
@@ -198,7 +197,7 @@ return {
 				},
 
 				math = {
-					enabled = true,
+					enabled = false, -- LaTeX/typst not viewed in Neovim
 
 					typst = {
 						tpl = [[
